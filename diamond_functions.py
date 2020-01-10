@@ -153,6 +153,7 @@ def plot_fit_ss_peaks(img, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data,
     plt.plot(img.lines_dict[pks][:,0],img.lines_dict[pks][:,1], linewidth=3)
     plt.plot(img.data_dict[pks][:,0],img.data_dict[pks][:,1],'+', markersize=15, mew=3)
     plt.xlim(xlims)
+    plt.ylim(500, 50000)
     plt.xlabel(r'Two Theta ($^\circ$)', fontsize=28)
     plt.title(pks,fontsize=28)
     plt.yscale('log')
