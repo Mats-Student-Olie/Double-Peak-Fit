@@ -143,7 +143,7 @@ def plot_fit_embedded_ss(self,reflection, x_val, y_val, dot_val):
     plt.xlabel('Strain, ${\epsilon}$', fontsize=10)
     plt.title('StressStrain', fontsize=10)
     
-def plot_fit_ss_peaks(img, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data, HCP_reflections, FCC_twotheta_data, FCC_reflections):
+def plot_fit_ss_peaks(img, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data, HCP_reflections, FCC_twotheta_data, FCC_reflections, FCT_twotheta_data, FCT_reflections):
 
     """ Plot the line fit and intensity measurements.
         Input peak labels i.e. (0004),(220)
@@ -165,6 +165,10 @@ def plot_fit_ss_peaks(img, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data,
         
     for ttheta_pk, name in zip(FCC_twotheta_data, FCC_reflections):    
         plt.axvline(x=ttheta_pk, clip_on=True, ls = 'dashed', c = 'r', lw = '0.75')
+        plt.text(ttheta_pk+0.01, 5000, str(name), clip_on=True, rotation=90)
+        
+    for ttheta_pk, name in zip(FCT_twotheta_data, FCT_reflections):    
+        plt.axvline(x=ttheta_pk, clip_on=True, ls = 'dashed', c = 'y', lw = '0.75')
         plt.text(ttheta_pk+0.01, 5000, str(name), clip_on=True, rotation=90)
 
     a = plt.axes([.2, .70, .2, .2])
