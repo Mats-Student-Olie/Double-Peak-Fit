@@ -162,15 +162,15 @@ def plot_fit_ss_peaks(img, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data,
     
     for ttheta_pk, name in zip(HCP_twotheta_data, HCP_reflections):
         plt.axvline(x=ttheta_pk, clip_on=True, ls = 'dashed', c = 'b', lw = '0.75')
-        plt.text(ttheta_pk, 4000, str(name), rotation=90, clip_on=True)
+        plt.text(ttheta_pk+0.005, 4000, str(name), rotation=90, clip_on=True)
         
     for ttheta_pk, name in zip(FCC_twotheta_data, FCC_reflections):    
         plt.axvline(x=ttheta_pk, clip_on=True, ls = 'dashed', c = 'r', lw = '0.75')
-        plt.text(ttheta_pk+0.01, 5000, str(name), clip_on=True, rotation=90)
+        plt.text(ttheta_pk+0.005, 5000, str(name), clip_on=True, rotation=90)
         
     for ttheta_pk, name in zip(FCT_twotheta_data, FCT_reflections):    
         plt.axvline(x=ttheta_pk, clip_on=True, ls = 'dashed', c = 'y', lw = '0.75')
-        plt.text(ttheta_pk+0.01, 5000, str(name), clip_on=True, rotation=90)
+        plt.text(ttheta_pk+0.005, 5000, str(name), clip_on=True, rotation=90)
 
     a = plt.axes([.2, .70, .2, .2])
     plt.plot(x_val, y_val, label = 'Engineering Stress')
