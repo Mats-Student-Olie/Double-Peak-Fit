@@ -153,7 +153,7 @@ def plot_fit_ss_peaks(img, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data,
     plt.plot(img.lines_dict[pks][:,0],img.lines_dict[pks][:,1], linewidth=3)
     plt.plot(img.data_dict[pks][:,0],img.data_dict[pks][:,1],'+', markersize=15, mew=3)
     plt.xlim(xlims)
-    plt.ylim(500, 50000)
+    plt.ylim(500, 500000)
     plt.xlabel(r'Two Theta ($^\circ$)', fontsize=28)
     plt.title(pks,fontsize=28)
     plt.yscale('log')
@@ -346,7 +346,7 @@ class FitCake:
         self.spectrum = get_cake(dirname,fname,cake=cake)
         self.reflection_list=[]        
         
-    def fit_peaks(self,reflection_list, peak_ranges, init_params=None):
+    def fit_peaks(self, reflection_list, peak_ranges, init_params=None):
         
         """ Input reflection peak labels i.e. (10-10), (0002), etc. and their associated 2-theta range as lists.
             Calculate results of the fit (amplitude, fwhm, etc.) and the fit line and store within the dictionaries.
