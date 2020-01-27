@@ -196,7 +196,7 @@ def plot_spectrum(self,xmin=0,xmax=10):
     plt.xlim(xmin,xmax)
     plt.tight_layout()
 
-#### Functions for fitting two and three peaks ####
+#### Functions for fitting multiple peaks ####
 
 def fit_two_peaks(peak_data, pv_1_cent=6.45, pv_1_min=6.37, pv_1_max=6.47, pv_2_cent=6.54, pv_2_min=6.46, pv_2_max=6.56, initParams=None):
     
@@ -220,12 +220,14 @@ def fit_two_peaks(peak_data, pv_1_cent=6.45, pv_1_min=6.37, pv_1_max=6.47, pv_2_
         #note, min and max values are not the same as bounds around the peak, but values that they can go up to!
         pars_1['pv_1center'].set(pv_1_cent, min=pv_1_min, max=pv_1_max)
         pars_1['pv_1sigma'].set(min=0.01, max=1)
-        pars_1['pv_1amplitude'].set(min=0.01)
+        pars_1['pv_1amplitude'].set(min=10)
+        pars_1['pv_1height'].set(min=10)
 
         pars_2 = PV_2.guess(intensity, x=ttheta)
         pars_2['pv_2center'].set(pv_2_cent,min=pv_2_min, max=pv_2_max)
         pars_2['pv_2sigma'].set(min=0.01, max=1)
-        pars_2['pv_2amplitude'].set(min=0.01)
+        pars_2['pv_2amplitude'].set(min=10)
+        pars_2['pv_2height'].set(min=10)
 
         pars=pars_1 + pars_2
         pars.add("constBG", 0)
@@ -259,15 +261,25 @@ def fit_three_peaks(peak_data, pv_1_cent=3.43, pv_1_min=3.36, pv_1_max=3.44, pv_
         pars_1 = PV_1.guess(intensity, x=ttheta)
         #note, min and max values are not the same as bounds around the peak, but values that they can go up to!
         pars_1['pv_1center'].set(pv_1_cent,min=pv_1_min, max=pv_1_max)
-        pars_1['pv_1sigma'].set(min=0.01, max=1)
+        #pars_1['pv_1sigma'].set(min=0.001, max=0.1)
+        #pars_1['pv_1amplitude'].set(min=0)
+        #pars_1['pv_1height'].set(min=10)
+        #pars_1['pv_1fwhm'].set(min=0.02, max=0.2)
 
         pars_2 = PV_2.guess(intensity, x=ttheta)
         pars_2['pv_2center'].set(pv_2_cent, min=pv_2_min, max=pv_2_max)
-        pars_2['pv_2sigma'].set(min=0.01, max=1)
+        #pars_2['pv_2sigma'].set(min=0.001, max=0.1)
+        #pars_2['pv_2amplitude'].set(min=0)
+        #pars_2['pv_2height'].set(min=10, max = 5000)
+        #pars_2['pv_2fwhm'].set(min=0.02, max=0.2)
 
         pars_3 = PV_3.guess(intensity, x=ttheta)
         pars_3['pv_3center'].set(pv_3_cent,min=pv_3_min, max=pv_3_max)
-        pars_3['pv_3sigma'].set(min=0.01, max=1)
+        #pars_3['pv_3sigma'].set(min=0.001, max=0.1)
+        #pars_3['pv_3amplitude'].set(min=1)
+        #pars_3['pv_3height'].set(min=10)
+        #pars_3['pv_3fwhm'].set(min=0.02, max=0.2)
+        
 
         pars=pars_1 + pars_2 + pars_3
         pars.add("constBG", 0)
@@ -414,7 +426,7 @@ class Fit2Peak:
             #store data in dictionary with peak label as the key 
         for reflection,peak_data in self.data_dict.items():
             #in this case the fit_two_peaks function is needed
-            fit_results, fit_line=fit_two_peaks(peak_data,pv_1_cent, pv_1_min, pv_1_max, pv_2_cent, pv_2_min, pv_2_max,initParams=None)
+            fit_results, fit_line=fit_two_peaks(peak_data,pv_1_cent, pv_1_min, pv_1_max, pv_2_cent, pv_2_min, pv_2_max, initParams=None)
             self.fits_dict[reflection]=fit_results
             self.lines_dict[reflection]=np.array(fit_line).T
     
