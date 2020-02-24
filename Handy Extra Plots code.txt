@@ -1,0 +1,222 @@
+##generate gif of line plot for zrh peaks
+
+gif_dir = '\gif'
+hydride_plots = '\zrh'
+
+images = []
+
+plt.rc('xtick', labelsize=10)
+plt.rc('ytick', labelsize=10)
+
+identifyer = ['o', '+', '*', '-']
+
+fig, ax = plt.subplots(figsize = (10, 10))
+
+for step in range(len(z_strains2[0])): #58
+    for peak in range(len(z_strains2[0:2])):     
+        ax = plt.subplot(111, projection='polar')
+        ax.plot(pp_range_rad, z_fwhm2[peak][step][:], label = zrh_pk_names[peak])
+        ax.legend(loc=(1,1))
+        title = 'S2_Step_' + str(step) + '_Hydride_fwhm'
+        ax.set_title(title, va='bottom')
+        ax.set_rlabel_position(45)  # Move radial labels away from plotted line
+        ax.set_rlim(0, 0.1)
+        #ax.set_rorigin(-200)
+        ax.set_theta_direction(-1)
+        ax.set_theta_zero_location('N', offset=0.0)
+        ax.set_xticks(np.pi/180. * np.linspace(0, 360, 36, endpoint=False))
+        ax.set_xticklabels(cake_nums)
+        
+    plot_name= str(out_dir+gif_dir+'\\'+str(step))
+    #print(plot_name)
+
+    fig.savefig(plot_name, bbox_inches='tight')
+    fig.clf()
+
+    images.append(imageio.imread(plot_name + '.png'))
+
+close('all')
+    
+imageio.mimsave(out_dir + hydride_plots + '\polar_line_hydride_fwhm_111_220.gif', images)
+
+##DELETE GENERATED PNG FILES
+for file in os.scandir(out_dir+gif_dir):
+    if file.name.endswith(".png"):
+        os.unlink(file.path)
+        
+
+
+
+
+##generate gif of line plot for matrx peaks
+
+gif_dir = '\gif'
+matrix_plots = '\matrix'
+
+images = []
+
+plt.rc('xtick', labelsize=10)
+plt.rc('ytick', labelsize=10)
+
+identifyer = ['o', '+', '*', '-']
+
+fig, ax = plt.subplots(figsize = (10, 10))
+
+for step in range(len(m_strains2[0])): #58
+    for peak in range(len(m_strains2[0:2])):     
+        ax = plt.subplot(111, projection='polar')
+        ax.plot(pp_range_rad, m_amp2[peak][step][:], label = matrix_peak_names[peak])
+        ax.legend(loc=(1,1))
+        title = 'S2_Step_' + str(step) + '_Matrix_Area'
+        ax.set_title(title, va='bottom')
+        ax.set_rlabel_position(45)  # Move radial labels away from plotted line
+        ax.set_rlim(0, 12500)
+        ax.set_rorigin(-2000)
+        ax.set_theta_direction(-1)
+        ax.set_theta_zero_location('N', offset=0.0)
+        ax.set_xticks(np.pi/180. * np.linspace(0, 360, 36, endpoint=False))
+        ax.set_xticklabels(cake_nums)
+        
+    plot_name= str(out_dir+gif_dir+'\\'+str(step))
+    #print(plot_name)
+
+    fig.savefig(plot_name, bbox_inches='tight')
+    fig.clf()
+
+    images.append(imageio.imread(plot_name + '.png'))
+
+close('all')
+    
+imageio.mimsave(out_dir + matrix_plots + '\polar_line_matrix_area_01-10_11-20.gif', images)
+
+##DELETE GENERATED PNG FILES
+for file in os.scandir(out_dir+gif_dir):
+    if file.name.endswith(".png"):
+        os.unlink(file.path)
+        
+        
+        
+        
+        
+        
+        
+##Single polar rose plot
+
+##log scale?
+##shift gridlines by 5 deg?
+
+plt.rc('xtick', labelsize=10)
+plt.rc('ytick', labelsize=10)
+
+width = np.pi/180*(10/3)
+half_cake = np.pi/180*(10/2)
+
+rmax = 30000
+rmin=-5000
+
+
+#radial_lines = np.full(36, rmax).tolist()
+
+fig, ax = plt.subplots(figsize=(10, 10))
+ax = plt.subplot(111, projection='polar')
+ax.bar(pp_range_rad, strains_list2[0][5][:], width, label = '(111)', edgecolor='grey')
+ax.bar(pp_range_rad+width, strains_list2[1][5][:], width, label = '(220)', edgecolor='grey')
+ax.bar(pp_range_rad-width, strains_list2[2][5][:], width, label = '(311)', edgecolor='grey')
+ax.legend(loc = 0, bbox_to_anchor = (1.1, 1.1))
+ax.set_rlabel_position(65)  # Move radial labels away from plotted line
+ax.set_theta_direction(-1)
+ax.set_xticks(np.pi/180. * np.linspace(0, 360, 36, endpoint=False))
+ax.set_rorigin(-20000)
+ax.set_rmax(rmax)
+ax.set_rmin(rmin)
+ax.set_xticklabels(cake_nums)
+#ax.set_yticklabels(rotation=90)
+ax.set_theta_zero_location('N', offset=0)
+#ax.axes.get_xaxis().set_visible(False)
+plt.show()
+fig.savefig(out_dir)
+
+
+
+
+
+### all steps as subplots (Rose Plot)
+
+num_plots = len(strains_list2[0])
+fig, ax = plt.subplots(num_plots, figsize=(10, 580), subplot_kw=dict(projection='polar'))
+
+plt.rc('xtick', labelsize=10)
+plt.rc('ytick', labelsize=10)
+
+identifyer = ['o', '+', '*']
+width = np.pi/180*(10/3)
+#colours = plt.cm.viridis(radii / 10.)
+position = [width*-1, 0, width]
+
+for peak, pos in zip(range(len(strains_list2)), position): #3
+    for step in range(len(strains_list2[peak])): #58
+        ax[step].bar(pp_range_rad+pos, strains_list2[peak][step][:], width, label=pk_names[peak])
+        ax[step].legend(loc=(1,1))
+        title = 'S2_Step_' + str(step) + '_Strain'
+        ax[step].set_title(title, va='bottom')
+        ax[step].set_rlabel_position(45)  # Move radial labels away from plotted line
+        ax[step].set_rlim(-5000, 30000)
+        ax[step].set_theta_direction(-1)
+        ax[step].set_theta_zero_location('N', offset=0.0)
+        ax[step].set_xticks(np.pi/180. * np.linspace(0, 360, 36, endpoint=False))
+        ax[step].set_xticklabels(cake_nums)
+
+
+
+
+
+##Generate gif of Polar Rose plots
+
+import imageio
+from matplotlib.pyplot import close
+
+gif_dir = '\gif'
+
+images = []
+
+plt.rc('xtick', labelsize=10)
+plt.rc('ytick', labelsize=10)
+
+identifyer = ['o', '+', '*']
+width = np.pi/180*(10/3)
+#colours = plt.cm.viridis(radii / 10.)
+position = [width*-1, 0, width]
+
+fig, ax = plt.subplots(figsize = (10, 10))
+
+for step in range(len(strains_list2[0])): #58
+    for peak, pos in zip(range(len(strains_list2[0:2])), position): #3    
+        ax = plt.subplot(111, projection='polar')
+        ax.bar(pp_range_rad+pos, strains_list2[peak][step][:], width, label=pk_names[peak], edgecolor='grey')
+        ax.legend(loc=(0.9, 0.9))
+        title = 'S2_Step_' + str(step) + '_Strain'
+        ax.set_title(title, va='bottom')
+        ax.set_rlabel_position(45)  # Move radial labels away from plotted line
+        ax.set_rlim(-5000, 30000)
+        ax.set_rorigin(-20000)
+        ax.set_theta_direction(-1)
+        ax.set_theta_zero_location('N', offset=0.0)
+        ax.set_xticks(np.pi/180. * np.linspace(0, 360, 36, endpoint=False))
+        ax.set_xticklabels(cake_nums)
+        
+    plot_name= str(out_dir+gif_dir+'\\'+str(step))
+    #print(plot_name)
+
+    fig.savefig(plot_name, bbox_inches='tight')
+    fig.clf()
+
+    images.append(imageio.imread(plot_name + '.png'))
+
+close('all')
+    
+imageio.mimsave(out_dir + '\polar_strain_doughnut_111_220.gif', images)
+
+##DELETE GENERATED PNG FILES
+for file in os.scandir(out_dir+gif_dir):
+    if file.name.endswith(".png"):
+        os.unlink(file.path)    
