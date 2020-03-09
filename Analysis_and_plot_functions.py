@@ -247,7 +247,7 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
     for i, j in enumerate(m_strains_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                m_strains_by_peak[i][k] = np.zeros(233)
+                m_strains_by_peak[i][k] = np.zeros(len(list_matrix_peak_centers[0]))
 
     for i, j in enumerate(m_cakes_by_peak):
         for k, l in enumerate(j):
@@ -257,17 +257,17 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
     for i, j in enumerate(m_fwhm_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                m_fwhm_by_peak[i][k] = np.zeros(233)
+                m_fwhm_by_peak[i][k] = np.zeros(len(list_matrix_peak_centers[0]))
 
     for i, j in enumerate(m_amp_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                m_amp_by_peak[i][k] = np.zeros(233)
+                m_amp_by_peak[i][k] = np.zeros(len(list_matrix_peak_centers[0]))
 
     for i, j in enumerate(m_cntr_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                m_cntr_by_peak[i][k] = np.zeros(233)
+                m_cntr_by_peak[i][k] = np.zeros(len(list_matrix_peak_centers[0]))
 
     ## Data now stored in 4 peak lists in order
 
@@ -296,7 +296,7 @@ def arrange_mx_pk_step(m_strains_by_peak, m_cakes_by_peak, m_peaks_by_peak, m_fw
         tmp1_amp = []
         tmp1_cntr = []
 
-        for i in range(233): # generate 58 lists
+        for i in range(len(m_strains_by_peak[0][0])): # generate 58 lists
             tmp2_strain = []
             tmp2_fwhm = []
             tmp2_amp = []
@@ -415,7 +415,7 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
     for i, j in enumerate(z_strains_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                z_strains_by_peak[i][k] = np.zeros(233)
+                z_strains_by_peak[i][k] = np.zeros(len(list_ZrH_peak_centres[0]))
 
     for i, j in enumerate(z_cakes_by_peak):
         for k, l in enumerate(j):
@@ -425,17 +425,17 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
     for i, j in enumerate(z_fwhm_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                z_fwhm_by_peak[i][k] = np.zeros(233)
+                z_fwhm_by_peak[i][k] = np.zeros(len(list_ZrH_peak_centres[0]))
 
     for i, j in enumerate(z_amp_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                z_amp_by_peak[i][k] = np.zeros(233)
+                z_amp_by_peak[i][k] = np.zeros(len(list_ZrH_peak_centres[0]))
 
     for i, j in enumerate(z_cntr_by_peak):
         for k, l in enumerate(j):
             if l == []:
-                z_cntr_by_peak[i][k] = np.zeros(233)
+                z_cntr_by_peak[i][k] = np.zeros(len(list_ZrH_peak_centres[0]))
 
     ## Data now stored in 4 peak lists in order
     
@@ -576,10 +576,9 @@ def plt_fwhm_vs_strain(cakes, z_dK, mx_dK, Eng_strain, z_strains_by_peak, m_stra
 
     merge_cakes, norm_dK_zrh1, norm_dK_mx1, tx_n_dK_zrh, tx_n_dK_mx, av_norm_dK_zrh, av_norm_dK_mx = choose_cakes(cakes, z_dK, mx_dK)
         
-    
     fig, ax0 = plt.subplots(figsize=(18, 10))
 
-    step_range = list(range(233))    
+    step_range = list(range(len(Eng_strain)))    
     matrix_colours = ['lightcyan', 'powderblue', 'lightblue','skyblue', 'lightskyblue', 'steelblue']
     hydride_colours = ['papayawhip', 'blanchedalmond', 'moccasin', 'navajowhite', 'wheat', 'burlywood']
 
@@ -674,7 +673,7 @@ def plt_fwhm_vs_step(cakes, z_dK, mx_dK, Eng_strain, z_strains_by_peak, m_strain
 
     fig.tight_layout(rect=[0, 0, 1, 0.95])
     
-    #fig.savefig(r'C:\Users\mbgnwob2\Dropbox (The University of Manchester)\2. Project\Python Script\Single Peak Fitting Script ORIGINAL - Copy\S3_Out_plots\FWHM_&_L-Strain_vs_Step_LDm3')
+    fig.savefig(r'C:\Users\mbgnwob2\Dropbox (The University of Manchester)\2. Project\Python Script\Single Peak Fitting Script ORIGINAL - Copy\S2_Out_plots\FWHM_&_L-Strain_vs_Step_LDm3')
 
 def zrh_fwhm_plt_by_steps(step, pp_range_rad, z_fwhm2, zrh_pk_names, cake_nums):
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -813,7 +812,7 @@ def WH_parameters_K_dK(z_cntr2, z_fwhm2, m_cntr2, m_fwhm2, wavelength):
             K_mx[peak].append(K_mx_tmp2)
             dK_mx[peak].append(dK_mx_tmp2)    
 
-            for j in range(233):
+            for j in range(len(m_cntr2[0])):
                 step = int(j)
                 pk_cntr_mx = m_cntr2[peak][step][cake]
                 pk_fwhm_mx = m_fwhm2[peak][step][cake]
