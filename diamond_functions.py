@@ -143,17 +143,19 @@ def plot_fit_embedded_ss(self,reflection, x_val, y_val, dot_val):
     plt.xlabel('Strain, ${\epsilon}$', fontsize=10)
     plt.title('StressStrain', fontsize=10)
     
-def plot_fit_ss_peaks(img, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data, HCP_reflections, FCC_twotheta_data, FCC_reflections, FCT_twotheta_data, FCT_reflections):
+def plot_fit_ss_peaks(fit, cake, step, pks, xlims, x_val, y_val, dot_val, HCP_twotheta_data, HCP_reflections, FCC_twotheta_data, FCC_reflections, FCT_twotheta_data, FCT_reflections):
 
     """ Plot the line fit and intensity measurements.
         Input peak labels i.e. (0004),(220)
     """
+    
+    img = fit[cake][step]
     plt.figure(figsize=(10,8))
     plt.minorticks_on()
     plt.plot(img.lines_dict[pks][:,0],img.lines_dict[pks][:,1], linewidth=3)
     plt.plot(img.data_dict[pks][:,0],img.data_dict[pks][:,1],'+', markersize=15, mew=3)
     plt.xlim(xlims)
-    plt.ylim(500, 500000)
+    plt.ylim(100, 500000)
     plt.xlabel(r'Two Theta ($^\circ$)', fontsize=28)
     plt.title(pks,fontsize=28)
     plt.yscale('log')
