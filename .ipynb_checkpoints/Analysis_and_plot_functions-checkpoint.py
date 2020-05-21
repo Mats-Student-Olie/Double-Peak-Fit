@@ -580,29 +580,30 @@ def plt_fwhm_vs_strain(cakes, z_dK, mx_dK, Eng_strain, z_strains_by_peak, m_stra
 
     step_range = list(range(len(Eng_strain)))    
     matrix_colours = ['lightcyan', 'powderblue', 'lightblue','skyblue', 'lightskyblue', 'steelblue']
+    matrix_dark = ['cornflowerblue','royalblue','dodgerblue','steelblue','lightslategrey','slateblue']
     hydride_colours = ['papayawhip', 'blanchedalmond', 'moccasin', 'navajowhite', 'wheat', 'burlywood']
+    hydride_dark = ['peachpuff', 'coral', 'sandybrown', 'peru', 'chocolate', 'burlywood']
 
     fig.suptitle('Peak Broardening in Hydrided Zr4', fontsize=18, fontweight='bold');
 
     #matrix
-
     for i, (data, cake) in enumerate(zip(norm_dK_mx1, merge_cakes)):
         l_lab = 'FWHM (10-10) cake = ' + str(cake)
         ax0.plot(Eng_strain, data, 'o', color = matrix_colours[i], label=l_lab)
-    ax0.plot(Eng_strain, medfilt(av_norm_dK_mx, 3), '--', color = 'deepskyblue', label='Av. $\Delta$FWHM Matrix (10-10)')
+    ax0.plot(Eng_strain, medfilt(av_norm_dK_mx, 3), '--', color = 'midnightblue', linewidth=4, label='Av. $\Delta$FWHM Matrix (10-10)')
     ax0_y2 = ax0.twinx()
     for i, cake_val in enumerate(merge_cakes):
         m_lab = 'L_Strain Zr4 (10-10) Cake ' + str(cake_val)
-        ax0_y2.plot(Eng_strain, m_strains_by_peak[1][cake_val], color = matrix_colours[i], label = m_lab)
+        ax0_y2.plot(Eng_strain, m_strains_by_peak[1][cake_val], color = matrix_dark[i], label = m_lab)
 
     #hydride
     for i, (data, cake) in enumerate(zip(norm_dK_zrh1, merge_cakes)):
         l_lab = 'FWHM (220) cake = ' + str(cake)
         ax0.plot(Eng_strain, data, 'o', color = hydride_colours[i], label = l_lab)
-    ax0.plot(Eng_strain, medfilt(av_norm_dK_zrh, 3), '--', color = 'orange', label = 'Av. $\Delta$FWHM Zrh (220)')
+    ax0.plot(Eng_strain, medfilt(av_norm_dK_zrh, 3), '--', color = 'sienna', linewidth=4, label = 'Av. $\Delta$FWHM Zrh (220)')
     for i, cake_val in enumerate(merge_cakes):
         s_lab = 'L_Strain ZrH (220) Cake ' + str(cake_val)
-        ax0_y2.plot(Eng_strain, z_strains_by_peak[1][cake_val], color = hydride_colours[i], label = s_lab)
+        ax0_y2.plot(Eng_strain, z_strains_by_peak[1][cake_val], color = hydride_dark[i], label = s_lab)
 
     ax0_y2.set_ylabel('microstrain (10$^{-6}$)', fontsize=15)
     ax0.legend(loc = 4,  bbox_to_anchor=(1.3, 0), fontsize=10)
@@ -614,14 +615,14 @@ def plt_fwhm_vs_strain(cakes, z_dK, mx_dK, Eng_strain, z_strains_by_peak, m_stra
     ax0.set_xlim(0.00)
     ax0_y2.set_ylim(-5000, 25000)
     ax0.set_ylim(-0.5, 2.5)
-    #ax0.axvline(0.0273, ymin = 0, ymax = 0.5, ls = '--', color = 'dimgrey', lw = 1)
-    #ax0.text(0.0273, 0.75, 'Onset of peak\nbroardening\nin Matrix', ha = 'center', wrap = True)
-    #ax0.axvline(0.046, ymin = 0, ymax = 0.75, ls = '--', color = 'dimgrey', lw = 1)
-    #ax0.text(0.046, 1.25, 'Onset of peak\nbroardening\nin Hydrides', ha = 'center', wrap = True)
+    ax0.axvline(0.028, ymin = 0, ymax = 0.5, ls = '--', color = 'dimgrey', lw = 1)
+    ax0.text(0.028, 1.05, 'Onset of peak\nbroardening\nin Matrix', ha = 'center', wrap = True)
+    ax0.axvline(0.054, ymin = 0, ymax = 0.75, ls = '--', color = 'dimgrey', lw = 1)
+    ax0.text(0.054, 1.8, 'Onset of peak\nbroardening\nin Hydrides', ha = 'center', wrap = True)
 
     fig.tight_layout(rect=[0, 0, 1, 0.95])
 
-    #fig.savefig(r'C:\Users\mbgnwob2\Dropbox (The University of Manchester)\2. Project\Python Script\Single Peak Fitting Script ORIGINAL - Copy\S2_Out_plots\W-H Plots\FWHM_&_L-Strain_vs_E-Strain_TDm3')
+    #fig.savefig(r'C:\Users\mbgnwob2\Dropbox (The University of Manchester)\2. Project\Python Script\Single Peak Fitting Script ORIGINAL - Copy\S2_Out_plots\New_FWHM_&_L-Strain_vs_E-Strain_LDm3')
     
 def plt_fwhm_vs_step(cakes, z_dK, mx_dK, Eng_strain, z_strains_by_peak, m_strains_by_peak):
     
@@ -666,14 +667,16 @@ def plt_fwhm_vs_step(cakes, z_dK, mx_dK, Eng_strain, z_strains_by_peak, m_strain
     ax0.set_xlim(0.00)
     ax0.set_ylim(-0.5, 2.5)
     ax0_y2.set_ylim(-5000, 25000)
-    #ax0.axvline(23, ymin = 0, ymax = 0.5, ls = '--', color = 'dimgrey', lw = 1)
-    #ax0.text(23, 0.8, 'Onset of peak\nbroardening\nin Matrix', ha = 'center', wrap = True)
-    #ax0.axvline(30, ymin = 0, ymax = 0.75, ls = '--', color = 'dimgrey', lw = 1)
-    #ax0.text(30, 1.26, 'Onset of peak\nbroardening\nin Hydrides', ha = 'center', wrap = True)
+    ax0.axvline(19, ymin = 0, ymax = 0.5, ls = '--', color = 'dimgrey', lw = 1)
+    ax0.text(19, 1.05, 'Onset of peak\nbroardening\nin Matrix', ha = 'center', wrap = True)
+    ax0.axvline(35, ymin = 0, ymax = 0.75, ls = '--', color = 'dimgrey', lw = 1)
+    ax0.text(35, 1.80, 'Onset of peak\nbroardening\nin Hydrides', ha = 'center', wrap = True)
+    #ax0.axvline(211, ymin = 0, ymax = 0.95, ls = '--', color = 'dimgrey', lw = 1)
+    #ax0.text(211, 2.4, 'Unloading', ha = 'center', wrap = True)
 
     fig.tight_layout(rect=[0, 0, 1, 0.95])
     
-    fig.savefig(r'C:\Users\mbgnwob2\Dropbox (The University of Manchester)\2. Project\Python Script\Single Peak Fitting Script ORIGINAL - Copy\S2_Out_plots\FWHM_&_L-Strain_vs_Step_LDm3')
+    #fig.savefig(r'C:\Users\mbgnwob2\Dropbox (The University of Manchester)\2. Project\Python Script\Single Peak Fitting Script ORIGINAL - Copy\S3_Out_plots\FWHM_&_L-Strain_vs_Step_LDm3')
 
 def zrh_fwhm_plt_by_steps(step, pp_range_rad, z_fwhm2, zrh_pk_names, cake_nums):
     fig, ax = plt.subplots(figsize=(10, 10))
