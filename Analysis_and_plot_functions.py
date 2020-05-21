@@ -23,11 +23,13 @@ def unpack_pickles(dic_names, pickles_dir):
     list_matrix_peak_centers = []
     list_matrix_peak_fwhm = []
     list_matrix_peak_amplitude = []
+    list_matrix_peak_height = []
 
     list_ZrH_peaks = []
     list_ZrH_peak_centres = []
     list_ZrH_peak_fwhm = []
     list_ZrH_peak_amplitude = []
+    list_ZrH_peak_height = []
 
     for pickles in dic_names:
         with open(pickles_dir + '\\' + pickles, 'rb') as x:
@@ -67,20 +69,24 @@ def unpack_pickles(dic_names, pickles_dir):
             #set up dictionaries to store the peak information
             m_peak_centres={}
             m_peak_fwhm={}
-            m_peak_amplitude={}    
+            m_peak_amplitude={}   
+            m_peak_height = {}
             ZrH_peak_centres={}
             ZrH_peak_fwhm={}
             ZrH_peak_amplitude={}
+            ZrH_peak_height = {}
 
             if len(peak) > 5:
                 m_peak_centres[peak]=[]
                 m_peak_fwhm[peak]=[]
                 m_peak_amplitude[peak]=[]
+                m_peak_height[peak] = []
 
             if len(peak) <= 5:
                 ZrH_peak_centres[peak]=[]
                 ZrH_peak_fwhm[peak]=[]
                 ZrH_peak_amplitude[peak]=[]
+                ZrH_peak_height[peak] = []
 
 
             image_number=[]
@@ -104,6 +110,9 @@ def unpack_pickles(dic_names, pickles_dir):
 
                     ttheta = data[i][reflections]['params_values'][prefix + 'fwhm']
                     ZrH_peak_fwhm[peak].append(ttheta)
+                    
+                    ttheta = data[i][reflections]['params_values'][prefix + 'height']
+                    ZrH_peak_height[peak].append(ttheta)
 
 
 
@@ -116,6 +125,9 @@ def unpack_pickles(dic_names, pickles_dir):
 
                     ttheta = data[i][reflections]['params_values'][prefix + 'fwhm']
                     m_peak_fwhm[peak].append(ttheta)
+                    
+                    ttheta = data[i][reflections]['params_values'][prefix + 'height']
+                    m_peak_height[peak].append(ttheta)
 
             #print(peak_centres[reflection])
 
@@ -126,11 +138,13 @@ def unpack_pickles(dic_names, pickles_dir):
                 x = list(ZrH_peak_centres.values())[0]
                 fwhm = list(ZrH_peak_fwhm.values())[0]
                 amp = list(ZrH_peak_amplitude.values())[0]
+                height = list(ZrH_peak_height.values())[0]
                 if len(list(ZrH_peak_centres.values())) > 1:
                     raise Exception
                 list_ZrH_peak_centres.append(x)
                 list_ZrH_peak_fwhm.append(fwhm)
                 list_ZrH_peak_amplitude.append(amp)
+                list_ZrH_peak_height.append(height)
 
 
             else:
@@ -140,11 +154,13 @@ def unpack_pickles(dic_names, pickles_dir):
                 y = list(m_peak_centres.values())[0]
                 m_fwhm = list(m_peak_fwhm.values())[0]
                 m_amp = list(m_peak_amplitude.values())[0]
+                m_height = list(m_peak_height.values())[0]
                 list_matrix_peak_centers.append(y)           
                 list_matrix_peak_fwhm.append(m_fwhm)
                 list_matrix_peak_amplitude.append(m_amp)
+                list_matrix_peak_height.append(m_height)
     
-    return list_ZrH_peaks, list_ZrH_peak_centres, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_matrix_peaks, list_matrix_peak_centers, list_matrix_peak_fwhm, list_matrix_peak_amplitude
+    return list_ZrH_peaks, list_ZrH_peak_centres, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_ZrH_peak_height, list_matrix_peaks, list_matrix_peak_centers, list_matrix_peak_fwhm, list_matrix_peak_amplitude, list_matrix_peak_height
 
 
 ##data is now stored in two lists
@@ -187,7 +203,7 @@ def order_peaks_n_cakes(list_matrix_peaks, list_ZrH_peaks):
 
 #list[first peak, second peak, third... ]
 
-def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_fwhm, list_matrix_peak_amplitude, list_matrix_peak_centers):
+def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_fwhm, list_matrix_peak_amplitude, list_matrix_peak_centers, list_matrix_peak_height):
 
     m_strains_by_peak = [[],[],[],[]]
     m_cakes_by_peak = [[],[],[],[]]
@@ -195,6 +211,7 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
     m_fwhm_by_peak = [[],[],[],[]]
     m_amp_by_peak = [[],[],[],[]]
     m_cntr_by_peak = [[],[],[],[]]
+    m_height_by_peak = [[],[],[],[]]
 
     for i in range(len(m_strains_by_peak)):
         for j in range(0,36):
@@ -205,8 +222,9 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
             m_fwhm_by_peak[i].append(j)
             m_amp_by_peak[i].append(j)
             m_cntr_by_peak[i].append(j)
+            m_height_by_peak[i].append(j)
 
-    for i,j,k,l,m,n in zip(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_fwhm, list_matrix_peak_amplitude, list_matrix_peak_centers):
+    for i,j,k,l,m,n,o in zip(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_fwhm, list_matrix_peak_amplitude, list_matrix_peak_centers, list_matrix_peak_height):
         index = int(j)    
         if i == '(01-10)':
             m_strains_by_peak[0][index] = k
@@ -215,6 +233,7 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
             m_fwhm_by_peak[0][index] = l
             m_amp_by_peak[0][index] = m
             m_cntr_by_peak[0][index] = n
+            m_height_by_peak[0][index] = o
 
         if i == '(11-20)':
             m_strains_by_peak[1][index] = k
@@ -223,6 +242,7 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
             m_fwhm_by_peak[1][index] = l
             m_amp_by_peak[1][index] = m
             m_cntr_by_peak[1][index] = n
+            m_height_by_peak[1][index] = o
 
         if i == '(02-20)':
             m_strains_by_peak[2][index] = k
@@ -231,6 +251,7 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
             m_fwhm_by_peak[2][index] = l
             m_amp_by_peak[2][index] = m
             m_cntr_by_peak[2][index] = n
+            m_height_by_peak[2][index] = o
 
         if i == '(01-13)':
             m_strains_by_peak[3][index] = k
@@ -239,6 +260,7 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
             m_fwhm_by_peak[3][index] = l
             m_amp_by_peak[3][index] = m
             m_cntr_by_peak[3][index] = n
+            m_height_by_peak[3][index] = o
 
     #print('cake order', len(m_cakes_by_peak), len(m_cakes_by_peak[0]), '\n', m_cakes_by_peak[0], '\n')
 
@@ -268,6 +290,11 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
         for k, l in enumerate(j):
             if l == []:
                 m_cntr_by_peak[i][k] = np.zeros(len(list_matrix_peak_centers[0]))
+                
+    for i, j in enumerate(m_height_by_peak):
+        for k, l in enumerate(j):
+            if l == []:
+                m_height_by_peak[i][k] = np.zeros(len(list_matrix_peak_centers[0]))
 
     ## Data now stored in 4 peak lists in order
 
@@ -276,35 +303,39 @@ def all_mx_by_peak(m_peaks_list, m_cakes_list, m_strains_list, list_matrix_peak_
     #print(len(m_strains_by_peak), len(m_strains_by_peak[2]), len(m_strains_by_peak[2][0]), m_strains_by_peak[2][15][:], '\n')
     #print(len(m_strains_by_peak), len(m_strains_by_peak[3]), len(m_strains_by_peak[3][0]), m_strains_by_peak[3][15][:], '\n')
     
-    return m_strains_by_peak, m_cakes_by_peak, m_peaks_by_peak, m_fwhm_by_peak, m_amp_by_peak, m_cntr_by_peak
+    return m_strains_by_peak, m_cakes_by_peak, m_peaks_by_peak, m_fwhm_by_peak, m_amp_by_peak, m_cntr_by_peak, m_height_by_peak
 
 
 
 
 ##re-arrange data into format: [peak][step][cake-strain]
 
-def arrange_mx_pk_step(m_strains_by_peak, m_cakes_by_peak, m_peaks_by_peak, m_fwhm_by_peak, m_amp_by_peak, m_cntr_by_peak):
+def arrange_mx_pk_step(m_strains_by_peak, m_cakes_by_peak, m_peaks_by_peak, m_fwhm_by_peak, m_amp_by_peak, m_cntr_by_peak, m_height_by_peak):
     
     m_strains2 = []
     m_fwhm2 = []
     m_amp2 = []
     m_cntr2 = []
+    m_height2 = []
 
     for peak in range(4): #generate 4 lists
         tmp1_strain = []
         tmp1_fwhm = []
         tmp1_amp = []
         tmp1_cntr = []
+        tmp1_height = []
 
         for i in range(len(m_strains_by_peak[0][0])): # generate 58 lists
             tmp2_strain = []
             tmp2_fwhm = []
             tmp2_amp = []
             tmp2_cntr = []
+            tmp2_height = []
             tmp1_strain.append(tmp2_strain) #append 58 lists to tmp1
             tmp1_fwhm.append(tmp2_fwhm)
             tmp1_amp.append(tmp2_amp)
             tmp1_cntr.append(tmp2_cntr)
+            tmp1_height.append(tmp2_height)
 
             for cake in range(36): # generate 36 lists
                 #print(peak, cake, i, m_strains_by_peak[peak][cake][i])
@@ -319,47 +350,55 @@ def arrange_mx_pk_step(m_strains_by_peak, m_cakes_by_peak, m_peaks_by_peak, m_fw
 
                 cntr = m_cntr_by_peak[peak][cake][i]
                 tmp1_cntr[i].append(cntr)
+                
+                height = m_height_by_peak[peak][cake][i]
+                tmp1_height[i].append(height)
 
         m_strains2.append(tmp1_strain)
         m_fwhm2.append(tmp1_fwhm)
         m_amp2.append(tmp1_amp)
         m_cntr2.append(tmp1_cntr)
-    return m_strains2, m_fwhm2, m_amp2, m_cntr2
+        m_height2.append(tmp1_height)
+    return m_strains2, m_fwhm2, m_amp2, m_cntr2, m_height2
 
 
 ##objective: re-arrange zrh data into format: [peak][cake][step]
 
-def all_zrh_by_peak(zrh_pk_names, list_ZrH_peaks, list_ZrH_peak_centres, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude):
+def all_zrh_by_peak(zrh_pk_names, list_ZrH_peaks, list_ZrH_peak_centres, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_ZrH_peak_height):
 
     peak_cake_pos = []
     peak_centres = []
     z_fwhm = []
     z_amp = []
+    z_height = []
 
     for i in zrh_pk_names:
         new_list = []
         new_list2 = []
         tmp_fwhm = []
         tmp_amp = []
-        for j,k,l,m in zip(list_ZrH_peaks, list_ZrH_peak_centres, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude):
+        tmp_height = []
+        for j,k,l,m,n in zip(list_ZrH_peaks, list_ZrH_peak_centres, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_ZrH_peak_height):
             if i in j:
                 new_list.append(j.split('_')[0]) # append name 'cake_peak'
                 new_list2.append(k) #append list of centres
                 tmp_fwhm.append(l)
                 tmp_amp.append(m)
+                tmp_height.append(n)
         peak_cake_pos.append(new_list) #list of 'cake value' for peaks
         peak_centres.append(new_list2) #list of data matching shape of list: peak_cake_pos
         z_fwhm.append(tmp_fwhm)
-        z_amp.append(z_amp)
+        z_amp.append(tmp_amp)
+        z_height.append(tmp_height)
 
-    return peak_cake_pos, peak_centres, z_fwhm, z_amp
+    return peak_cake_pos, peak_centres, z_fwhm, z_amp, z_height
 
 
 
 
 #Seperate zrh into the peaks
 
-def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_ZrH_peak_centres):
+def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_ZrH_peak_centres, list_ZrH_peak_height):
 
     #Seperate zrh into the peaks
 
@@ -371,6 +410,7 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
     z_fwhm_by_peak = [[],[],[],[]]
     z_amp_by_peak = [[],[],[],[]]
     z_cntr_by_peak = [[],[],[],[]]
+    z_height_by_peak = [[],[],[],[]]
 
     for i in range(len(z_strains_by_peak)):
         for j in range(0,36):
@@ -381,8 +421,9 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
             z_fwhm_by_peak[i].append(j)
             z_amp_by_peak[i].append(j)
             z_cntr_by_peak[i].append(j)
+            z_height_by_peak[i].append(j)
 
-    for i,j,k,l,m,n in zip(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_ZrH_peak_centres):
+    for i,j,k,l,m,n,o in zip(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_peak_fwhm, list_ZrH_peak_amplitude, list_ZrH_peak_centres, list_ZrH_peak_height):
         index = int(j)    
         if i == '(111)':
             z_strains_by_peak[0][index] = k
@@ -391,6 +432,7 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
             z_fwhm_by_peak[0][index] = l
             z_amp_by_peak[0][index] = m
             z_cntr_by_peak[0][index] = n
+            z_height_by_peak[0][index] = o
 
         if i == '(220)':
             z_strains_by_peak[1][index] = k
@@ -399,6 +441,7 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
             z_fwhm_by_peak[1][index] = l
             z_amp_by_peak[1][index] = m
             z_cntr_by_peak[1][index] = n
+            z_height_by_peak[1][index] = o
 
         if i == '(311)':
             z_strains_by_peak[2][index] = k
@@ -407,6 +450,7 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
             z_fwhm_by_peak[2][index] = l
             z_amp_by_peak[2][index] = m
             z_cntr_by_peak[2][index] = n
+            z_height_by_peak[2][index] = o
 
     #print('cake order', len(m_cakes_by_peak), len(m_cakes_by_peak[0]), '\n', m_cakes_by_peak[0], '\n')
 
@@ -436,36 +480,45 @@ def arrange_zrh_by_peak(z_peaks_list, z_cakes_list, z_strains_list, list_ZrH_pea
         for k, l in enumerate(j):
             if l == []:
                 z_cntr_by_peak[i][k] = np.zeros(len(list_ZrH_peak_centres[0]))
+                
+    for i, j in enumerate(z_height_by_peak):
+        for k, l in enumerate(j):
+            if l == []:
+                z_height_by_peak[i][k] = np.zeros(len(list_ZrH_peak_centres[0]))
 
     ## Data now stored in 4 peak lists in order
     
-    return z_strains_by_peak, z_cakes_by_peak, z_fwhm_by_peak, z_amp_by_peak, z_cntr_by_peak
+    return z_strains_by_peak, z_cakes_by_peak, z_fwhm_by_peak, z_amp_by_peak, z_cntr_by_peak, z_height_by_peak
 
 
 
 ##re-arrange zrh data into format: [peak][step][cake-strain]
-def arrange_zrh_pk_step(z_strains_by_peak, z_fwhm_by_peak, z_amp_by_peak, z_cntr_by_peak):
+def arrange_zrh_pk_step(z_strains_by_peak, z_fwhm_by_peak, z_amp_by_peak, z_cntr_by_peak, z_height_by_peak):
 
     z_strains2 = []
     z_fwhm2 = []
     z_amp2 = []
     z_cntr2 = []
+    z_height2 = []
 
     for peak in range(len(z_strains_by_peak)): #generate 4 lists
         tmp1_strain = []
         tmp1_fwhm = []
         tmp1_amp = []
         tmp1_cntr = []
+        tmp1_height = []
 
         for i in range(len(z_strains_by_peak[peak][0])): # generate 58 lists
             tmp2_strain = []
             tmp2_fwhm = []
             tmp2_amp = []
             tmp2_cntr = []
+            tmp2_height = []
             tmp1_strain.append(tmp2_strain) #append 58 lists to tmp1
             tmp1_fwhm.append(tmp2_fwhm)
             tmp1_amp.append(tmp2_amp)
             tmp1_cntr.append(tmp2_cntr)
+            tmp1_height.append(tmp2_height)
 
             for cake in range(len(z_strains_by_peak[peak])): # generate 36 lists
                 strain = z_strains_by_peak[peak][cake][i]
@@ -479,13 +532,17 @@ def arrange_zrh_pk_step(z_strains_by_peak, z_fwhm_by_peak, z_amp_by_peak, z_cntr
 
                 cntr = z_cntr_by_peak[peak][cake][i]
                 tmp1_cntr[i].append(cntr)
+                
+                height = z_height_by_peak[peak][cake][i]
+                tmp1_height[i].append(height)
 
         z_strains2.append(tmp1_strain)
         z_fwhm2.append(tmp1_fwhm)
         z_amp2.append(tmp1_amp)
         z_cntr2.append(tmp1_cntr)
+        z_height2.append(tmp1_height)
 
-    return z_strains2, z_fwhm2, z_amp2, z_cntr2
+    return z_strains2, z_fwhm2, z_amp2, z_cntr2, z_height2
 
 
 
